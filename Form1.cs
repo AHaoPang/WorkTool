@@ -98,8 +98,9 @@ namespace CheckTools
                 //若满足规则所指条件，那么就追加记录规则名，以及分数
                 if (rule.RuleResule(fileContent, out rowNum))
                 {
-                    OutPutFileWrite(string.Format("规则：{0} 分数：{1} 位置：{2}", rule.GetRuleName(), rule.GetRuleGrade(),
-                        rowNum + 1));
+                    if (rowNum != 0) OutPutFileWrite(string.Format("规则：{0} 分数：{1} 位置：{2}", rule.GetRuleName(), rule.GetRuleGrade(), rowNum + 1));
+                    else OutPutFileWrite(string.Format("规则：{0} 分数：{1}", rule.GetRuleName(), rule.GetRuleGrade()));
+
                     fileContentGrade += rule.GetRuleGrade();
                 }
             }
