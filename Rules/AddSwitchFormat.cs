@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddSwitchFormat: I_Rules
+    public class AddSwitchFormat : I_Rules
     {
         public string GetRuleName()
         {
@@ -32,7 +32,7 @@ namespace CheckTools.Rules
             //遍历每一行，找到包含switch关键字的行，就开始判断
             for (int i = 0; i < fileContent.Count; i++)
             {
-                if (fileContent[i].IndexOf("switch") != -1)
+                if (fileContent[i].Trim().StartsWith("switch"))
                 {
                     var temp = RuleUtils.GetCodeRange(i, fileContent);
                     //1.没找到switch的作用域，那么就说明不符合要求
@@ -45,7 +45,6 @@ namespace CheckTools.Rules
                         tempStr += fileContent[j];
                     }
                     if (tempStr.IndexOf("default:") != -1) returnB = true;
-                    else returnB = false;
                 }
             }
 

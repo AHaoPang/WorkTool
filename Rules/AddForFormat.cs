@@ -34,11 +34,8 @@ namespace CheckTools.Rules
 
             for (int i = 0; i < fileContent.Count; i++)
             {
-                if (fileContent[i].IndexOf("for (") != -1
-                    ||
-                    fileContent[i].IndexOf("while (") != -1
-                    ||
-                    fileContent[i].IndexOf("foreach (") != -1)
+                if (fileContent[i].Trim().StartsWith("for (") ||
+                    fileContent[i].Trim().StartsWith("foreach ("))
                 {
                     var tupleTemp = RuleUtils.GetCodeRange(i, fileContent);
                     if (tupleTemp.Item2 == 0) return false;

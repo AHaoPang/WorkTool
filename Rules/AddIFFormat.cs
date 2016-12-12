@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddIFFormat: I_Rules
+    public class AddIFFormat : I_Rules
     {
         public string GetRuleName()
         {
@@ -35,9 +35,8 @@ namespace CheckTools.Rules
 
             for (int i = 0; i < fileContent.Count; i++)
             {
-                if (fileContent[i].IndexOf("if (") != -1
-                    ||
-                    fileContent[i].IndexOf("else if (") != -1)
+                if (fileContent[i].Trim().StartsWith("if (") ||
+                    fileContent[i].Trim().StartsWith("else if ("))
                 {
                     var tupleTemp = RuleUtils.GetCodeRange(i, fileContent);
                     if (tupleTemp.Item2 == 0) return false;

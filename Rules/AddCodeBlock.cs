@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddCodeBlock: I_Rules
+    public class AddCodeBlock : I_Rules
     {
         public string GetRuleName()
         {
@@ -33,17 +33,17 @@ namespace CheckTools.Rules
             //1.计算文件的总行数
             int fileLines = fileContent.Count;
             //2.计算#region的数量
-            int regionNum = fileLines/100;
+            int regionNum = fileLines / 100;
             int realRegionNum = 0;
 
             //3.遍历每一行，得到#region的数量
             foreach (var line in fileContent)
             {
-                if (line.IndexOf("#region") != -1) realRegionNum++;
+                if (line.Trim().StartsWith("#region")) realRegionNum++;
             }
 
-            //4.比较理论数量和真是数量
-            if (realRegionNum > regionNum) return true;
+            //4.比较理论数量和真实数量
+            if (realRegionNum >= regionNum) return true;
 
             return false;
         }

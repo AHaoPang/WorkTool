@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddCodeBeautiful: I_Rules
+    public class AddCodeBeautiful : I_Rules
     {
         public string GetRuleName()
         {
@@ -28,9 +28,9 @@ namespace CheckTools.Rules
 
         private bool RealOpera(List<string> fileContent)
         {
-            //代码行数量在100~200之间的，被称为“风格优美”
+            //代码行数量在100~300之间的，被称为“风格优美”
             int lineCount = fileContent.Count;
-            if (lineCount >= 100 && lineCount <= 200) return true;
+            if (lineCount >= 100 && lineCount <= 300) return true;
 
             return false;
         }
