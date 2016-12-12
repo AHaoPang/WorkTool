@@ -11,6 +11,8 @@ namespace CheckTools.Rules
     /// </summary>
     public class RuleUtils
     {
+        #region 公共方法
+
         /// <summary>
         /// 获取代码的作用域
         /// </summary>
@@ -24,7 +26,7 @@ namespace CheckTools.Rules
             int maxNum = 0;
             int bracket = 0;
 
-            for (int i = pos + 1; i < fileContent.Count; i++)
+            for (int i = pos; i < fileContent.Count; i++)
             {
                 if (fileContent[i].IndexOf("{") != -1)
                 {
@@ -47,7 +49,7 @@ namespace CheckTools.Rules
         }
 
         /// <summary>
-        /// 获取当前位置前的注释行范围（在4行之内找，没找到就默认为没有注释）
+        /// 获取当前位置前的注释行范围
         /// </summary>
         /// <param name="pos">当前的位置</param>
         /// <param name="fileContent">文件中的行列表</param>
@@ -57,130 +59,21 @@ namespace CheckTools.Rules
             int minNum = 0;
             int maxNum = 0;
 
-            int countLimt = 0;
             for (int i = pos - 1; i >= 0; i--)
             {
-                if (fileContent[i].IndexOf("//") != -1)
+                //以//开头，证明是注释
+                if (fileContent[i].Trim().StartsWith("//"))
                 {
                     if (maxNum == 0) maxNum = i;
                     minNum = i;
                 }
-                else
-                {
-                    countLimt++;
-                    if (maxNum != 0) break;
-                    if (countLimt >= 4) break;
-                }
+                //以[开头，证明是Attribute
+                else if (fileContent[i].Trim().StartsWith("[")) continue;
+                //其它情况，直接中止查找
+                else break;
             }
 
             return new Tuple<int, int>(minNum, maxNum);
-        }
-
-        /// <summary>
-        /// 将多个行之间的字符串按照一定规则连接起来（去掉斜杠、空格、空白操作符,）
-        /// </summary>
-        /// <param name="startLinePos">起始行</param>
-        /// <param name="endLinePos">终止行</param>
-        /// <param name="fileContent">文件行列表</param>
-        /// <returns>多个行连成一个字符串的结果</returns>
-        private static string GetLinesStr(int startLinePos, int endLinePos, List<string> fileContent)
-        {
-            string strTemp = "";
-
-            if (startLinePos == endLinePos) strTemp = fileContent[startLinePos].Replace("/", "").Replace(" ", "").Trim();
-            else
-            {
-                for (int i = startLinePos; i <= endLinePos; i++)
-                {
-                    strTemp += fileContent[i].Replace("/", "").Replace(" ", "").Trim();
-                }
-            }
-            return strTemp;
-        }
-
-        /// <summary>
-        /// 判断指定标签对内部是否有内容
-        /// </summary>
-        /// <param name="startP">完整字符串的起始核查位置</param>
-        /// <param name="checkStr">要核查的字符串</param>
-        /// <param name="totalStr">完整的字符串</param>
-        /// <returns>判断结果</returns>
-        private static bool HasValue(int startP, string checkStr, string totalStr, out int endP)
-        {
-            endP = 0;
-            int startPos = 0;
-            int endPos = 0;
-            string strT = "";
-
-            int tempInt = totalStr.IndexOf(checkStr, startP);
-            if (tempInt != -1)
-            {
-                startPos = tempInt + checkStr.Length;
-                int tempInt2 = totalStr.IndexOf(checkStr, startPos);
-                if (tempInt2 != -1)
-                {
-                    endPos = tempInt2 - 1;
-
-                    if (startPos == endPos) return false;
-                    else
-                    {
-                        endP = tempInt2 + checkStr.Length;
-                        strT = totalStr.Substring(startPos, endPos + 1 - startPos);
-                        if (string.IsNullOrEmpty(strT)) return false;
-                        else
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// 判断Param标签对内部是否有内容
-        /// </summary>
-        /// <param name="startP">完整字符串的起始核查位置</param>
-        /// <param name="totalStr">完整的字符串</param>
-        /// <returns>判断结果</returns>
-        private static bool HasParamValue(int startP, string totalStr, out int endP)
-        {
-            string checkStr = "<param";
-            endP = 0;
-            int startPos = 0;
-            int endPos = 0;
-            string strT = "";
-
-            int tempInt = totalStr.IndexOf(checkStr, startP);
-            if (tempInt != -1)
-            {
-                int tempInt3 = totalStr.IndexOf(">", tempInt);
-                startPos = tempInt3 + 1;
-                int tempInt2 = totalStr.IndexOf(checkStr, startPos);
-                if (tempInt2 != -1)
-                {
-                    endPos = tempInt2 - 1;
-
-                    if (startPos == endPos) return false;
-                    else
-                    {
-                        endP = tempInt2 + checkStr.Length;
-                        strT = totalStr.Substring(startPos, endPos + 1 - startPos);
-                        if (string.IsNullOrEmpty(strT)) return false;
-                        else
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else
-                    return false;
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -195,16 +88,17 @@ namespace CheckTools.Rules
             string strTemp = GetLinesStr(startLinePos, endLinePos, fileContent);
 
             //<summary>和<summary>之间的内容判断
-            int outP = 0;
-            int sP = 0;
-            bool returnB = false;
+            int outP, sP = 0;
+            bool returnB;
 
             do
             {
                 returnB = HasValue(sP, "<summary>", strTemp, out outP);
-                if (returnB == false && outP != 0) break;
+                //只要有一对不符合要求，就是false;
+                //只要找不到成对的标签，就放弃查找
+                if (returnB == false || outP == 0) break;
                 sP = outP;
-            } while (outP != 0);
+            } while (returnB);
 
             return returnB;
         }
@@ -221,16 +115,15 @@ namespace CheckTools.Rules
             string strTemp = GetLinesStr(startLinePos, endLinePos, fileContent);
 
             //<param和<param>的内容判断
-            int outP = 0;
-            int sP = 0;
-            bool returnB = false;
+            int outP, sP = 0;
+            bool returnB;
 
             do
             {
                 returnB = HasParamValue(sP, strTemp, out outP);
-                if (returnB == false && outP != 0) break;
+                if (returnB == false || outP == 0) break;
                 sP = outP;
-            } while (outP != 0);
+            } while (returnB);
 
             return returnB;
         }
@@ -247,18 +140,123 @@ namespace CheckTools.Rules
             string strTemp = GetLinesStr(startLinePos, endLinePos, fileContent);
 
             //<returns>和<returns>的内容判断
-            int outP = 0;
-            int sP = 0;
-            bool returnB = false;
+            int outP, sP = 0;
+            bool returnB;
 
             do
             {
                 returnB = HasValue(sP, "<returns>", strTemp, out outP);
-                if (returnB == false && outP != 0) break;
+                if (returnB == false || outP == 0) break;
                 sP = outP;
-            } while (outP != 0);
+            } while (returnB);
 
             return returnB;
         }
+
+        #endregion
+
+        #region 私有方法
+
+        /// <summary>
+        /// 将多个行之间的字符串按照一定规则连接起来（去掉斜杠、空格、空白操作符,）
+        /// </summary>
+        /// <param name="startLinePos">起始行</param>
+        /// <param name="endLinePos">终止行</param>
+        /// <param name="fileContent">文件行列表</param>
+        /// <returns>多个行连成一个字符串的结果</returns>
+        private static string GetLinesStr(int startLinePos, int endLinePos, List<string> fileContent)
+        {
+            string strTemp = "";
+
+            if (startLinePos == endLinePos) strTemp = fileContent[startLinePos];
+            else
+            {
+                for (int i = startLinePos; i <= endLinePos; i++)
+                {
+                    strTemp += fileContent[i];
+                }
+            }
+            return strTemp.Replace("/", "").Replace(" ", "").Trim();
+        }
+
+        /// <summary>
+        /// 判断指定标签对内部是否有内容(标签对必须是一模一样的)
+        /// </summary>
+        /// <param name="startP">完整字符串的起始核查位置</param>
+        /// <param name="checkStr">要核查的字符串</param>
+        /// <param name="totalStr">完整的字符串</param>
+        /// <param name="endP">判断到了哪个位置</param>
+        /// <returns>判断结果</returns>
+        private static bool HasValue(int startP, string checkStr, string totalStr, out int endP)
+        {
+            endP = 0;
+            int startPos;
+            int endPos;
+            string strT;
+
+            int tempInt = totalStr.IndexOf(checkStr, startP);
+            if (tempInt != -1)
+            {
+                startPos = tempInt + checkStr.Length;
+                int tempInt2 = totalStr.IndexOf(checkStr, startPos);
+                if (tempInt2 != -1)
+                {
+                    endPos = tempInt2 - 1;
+
+                    if (startPos != endPos)
+                    {
+                        endP = tempInt2 + checkStr.Length;
+                        strT = totalStr.Substring(startPos, endPos - startPos + 1);
+
+                        if (!string.IsNullOrEmpty(strT)) return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 判断Param标签对内部是否有内容
+        /// </summary>
+        /// <param name="startP">完整字符串的起始核查位置</param>
+        /// <param name="totalStr">完整的字符串</param>
+        /// <param name="endP">判断到了哪个位置</param>
+        /// <returns>判断结果</returns>
+        private static bool HasParamValue(int startP, string totalStr, out int endP)
+        {
+            endP = 0;
+            string checkStr = "<param";
+            int startPos = 0;
+            int endPos = 0;
+            string strT = "";
+
+            int tempInt = totalStr.IndexOf(checkStr, startP);
+            if (tempInt != -1)
+            {
+                startPos = totalStr.IndexOf(">", tempInt) + 1;
+                int tempInt2 = totalStr.IndexOf(checkStr, startPos);
+                if (tempInt2 != -1)
+                {
+                    endPos = tempInt2 - 1;
+
+                    if (startPos != endPos)
+                    {
+                        endP = tempInt2 + checkStr.Length;
+                        strT = totalStr.Substring(startPos, endPos - startPos + 1);
+
+                        if (!string.IsNullOrEmpty(strT)) return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }

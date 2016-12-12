@@ -31,7 +31,6 @@ namespace CheckTools.Rules
         {
             rowNum = 0;
             //定位到方法的位置，排除 Page_Load ProcessRequest
-            //在当前位置以上5行之内，找到所有注释（无，扣分，有，继续判断）
             //注意：所有的内容判断都是可选的
             //<summary>和</summary>的内容判断
             //<param和</param>的内容判断
