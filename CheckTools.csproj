@@ -62,6 +62,7 @@
     <Compile Include="Rules\AddSwitchFormat.cs" />
     <Compile Include="Rules\RuleUtils.cs" />
     <Compile Include="Rules\SubClassComment.cs" />
+    <Compile Include="Rules\SubEnumComment.cs" />
     <Compile Include="Rules\SubForComment.cs" />
     <Compile Include="Rules\SubFunctionComment.cs" />
     <Compile Include="Rules\SubIFComment.cs" />

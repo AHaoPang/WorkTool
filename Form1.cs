@@ -25,6 +25,7 @@ namespace CheckTools
                 new SubClassComment(),
                 new SubForComment(),
                 new SubFunctionComment(),
+                new SubEnumComment(),
 
                 //加分项
                 new AddCodeBlock(),
@@ -127,4 +128,6 @@ namespace CheckTools
         }
         #endregion
     }
+
+
 }
