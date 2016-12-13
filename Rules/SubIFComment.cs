@@ -6,27 +6,14 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class SubIFComment: I_Rules
+    public class SubIFComment: RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "判断注释扣分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
-        {
-            rowNum = 0;
-            try
-            {
-                return RealOpera(fileContent, out rowNum);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool RealOpera(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
             //判断过程十分复杂，考虑以后改进和实现（有的加，有的不加，这个范围不好选择）
@@ -34,7 +21,7 @@ namespace CheckTools.Rules
             return false;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return -1;
         }

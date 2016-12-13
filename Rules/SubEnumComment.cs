@@ -6,27 +6,14 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class SubEnumComment: I_Rules
+    public class SubEnumComment: RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "枚举注释扣分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
-        {
-            rowNum = 0;
-            try
-            {
-                return RealOpera(fileContent, out rowNum);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool RealOpera(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
 
@@ -52,7 +39,7 @@ namespace CheckTools.Rules
             return returnB;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return -1f;
         }

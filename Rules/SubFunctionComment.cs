@@ -7,27 +7,14 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class SubFunctionComment : I_Rules
+    public class SubFunctionComment : RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "方法注释扣分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
-        {
-            rowNum = 0;
-            try
-            {
-                return RealOpera(fileContent, out rowNum);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool RealOpera(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
             //定位到方法的位置，排除 Page_Load ProcessRequest
@@ -41,7 +28,8 @@ namespace CheckTools.Rules
                 rowNum = i;
                 if (Regex.IsMatch(fileContent[i], @"(public|protected|private|static).*\(") &&
                     fileContent[i].IndexOf("Page_Load") == -1 &&
-                    fileContent[i].IndexOf("ProcessRequest") == -1)
+                    fileContent[i].IndexOf("ProcessRequest") == -1 &&
+                    fileContent[i].IndexOf("=") == -1)
                 {
                     var tupleTemp = RuleUtils.GetCommentRange(i, fileContent);
                     if (tupleTemp.Item2 == 0) return true;
@@ -54,7 +42,7 @@ namespace CheckTools.Rules
             return false;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return -1;
         }

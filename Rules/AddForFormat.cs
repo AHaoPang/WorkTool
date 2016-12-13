@@ -6,28 +6,16 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddForFormat : I_Rules
+    public class AddForFormat : RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "循环格式加分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
-            try
-            {
-                return RealOpera(fileContent);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool RealOpera(List<string> fileContent)
-        {
             //在文件行中查找的关键字是：for\foreach
             //他们的作用域都能找到的时候，就证明符合规范的加分条件
             bool returnB = false;
@@ -46,7 +34,7 @@ namespace CheckTools.Rules
             return returnB;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return 0.1f;
         }

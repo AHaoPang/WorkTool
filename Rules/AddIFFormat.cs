@@ -6,28 +6,16 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddIFFormat : I_Rules
+    public class AddIFFormat : RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "if判断格式加分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
-            try
-            {
-                return RealOpera(fileContent);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool RealOpera(List<string> fileContent)
-        {
             bool returnB = false;
 
             //在文件行中查找的关键字是：if\else if
@@ -47,7 +35,7 @@ namespace CheckTools.Rules
             return returnB;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return 0.2f;
         }

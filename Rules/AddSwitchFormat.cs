@@ -6,28 +6,16 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddSwitchFormat : I_Rules
+    public class AddSwitchFormat : RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "switch语句加分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
-            try
-            {
-                return RealOpera(fileContent);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool RealOpera(List<string> fileContent)
-        {
             bool returnB = false;
             //遍历每一行，找到包含switch关键字的行，就开始判断
             for (int i = 0; i < fileContent.Count; i++)
@@ -51,7 +39,7 @@ namespace CheckTools.Rules
             return returnB;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return 0.1f;
         }

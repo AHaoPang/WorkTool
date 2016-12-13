@@ -55,6 +55,7 @@
     <Compile Include="I_Rules.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleBase.cs" />
     <Compile Include="Rules\AddCodeBeautiful.cs" />
     <Compile Include="Rules\AddCodeBlock.cs" />
     <Compile Include="Rules\AddForFormat.cs" />

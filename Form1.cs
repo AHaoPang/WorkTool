@@ -19,7 +19,7 @@ namespace CheckTools
             InitializeComponent();
 
             //窗体展示的时候，要加载所有的规则
-            ruleList = new List<I_Rules>()
+            ruleList = new List<RuleBase>()
             {
                 //扣分项
                 new SubClassComment(),
@@ -39,7 +39,7 @@ namespace CheckTools
         /// <summary>
         /// 所有审核规则的列表
         /// </summary>
-        private List<I_Rules> ruleList;
+        private List<RuleBase> ruleList;
 
         /// <summary>
         /// 开始处理
@@ -128,6 +128,4 @@ namespace CheckTools
         }
         #endregion
     }
-
-
 }

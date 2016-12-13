@@ -6,27 +6,14 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class SubForComment : I_Rules
+    public class SubForComment : RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "循环注释扣分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
-        {
-            rowNum = 0;
-            try
-            {
-                return RealOpera(fileContent, out rowNum);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool RealOpera(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
             //定位到关键字的位置
@@ -62,7 +49,7 @@ namespace CheckTools.Rules
             return false;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return -1;
         }

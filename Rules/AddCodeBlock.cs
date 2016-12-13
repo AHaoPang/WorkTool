@@ -6,28 +6,16 @@ using System.Threading.Tasks;
 
 namespace CheckTools.Rules
 {
-    public class AddCodeBlock : I_Rules
+    public class AddCodeBlock : RuleBase
     {
-        public string GetRuleName()
+        public override string GetRuleName()
         {
             return "代码块加分";
         }
 
-        public bool RuleResule(List<string> fileContent, out int rowNum)
+        protected override bool RealOpera(List<string> fileContent, out int rowNum)
         {
             rowNum = 0;
-            try
-            {
-                return OperaReal(fileContent);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private bool OperaReal(List<string> fileContent)
-        {
             //每100行代码，包含一对#region，就表明代码块是应该加分的
 
             //1.计算文件的总行数
@@ -48,7 +36,7 @@ namespace CheckTools.Rules
             return false;
         }
 
-        public float GetRuleGrade()
+        public override float GetRuleGrade()
         {
             return 0.1f;
         }
