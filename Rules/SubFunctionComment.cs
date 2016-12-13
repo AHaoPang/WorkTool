@@ -39,10 +39,8 @@ namespace CheckTools.Rules
             for (int i = 0; i < fileContent.Count; i++)
             {
                 rowNum = i;
-                if (Regex.IsMatch(fileContent[i], @"(public|protected|private|static).*\(")
-                    &&
-                    fileContent[i].IndexOf("Page_Load") == -1
-                    &&
+                if (Regex.IsMatch(fileContent[i], @"(public|protected|private|static).*\(") &&
+                    fileContent[i].IndexOf("Page_Load") == -1 &&
                     fileContent[i].IndexOf("ProcessRequest") == -1)
                 {
                     var tupleTemp = RuleUtils.GetCommentRange(i, fileContent);

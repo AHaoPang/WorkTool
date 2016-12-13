@@ -21,15 +21,17 @@ namespace CheckTools
             //窗体展示的时候，要加载所有的规则
             ruleList = new List<I_Rules>()
             {
+                //扣分项
                 new SubClassComment(),
-                //new SubForComment(),
-                //new SubFunctionComment(),
+                new SubForComment(),
+                new SubFunctionComment(),
 
-                //new AddCodeBlock(),
-                //new AddCodeBeautiful(),
-                //new AddSwitchFormat(),
-                //new AddForFormat(),
-                //new AddIFFormat()
+                //加分项
+                new AddCodeBlock(),
+                new AddCodeBeautiful(),
+                new AddSwitchFormat(),
+                new AddForFormat(),
+                new AddIFFormat()
             };
         }
 

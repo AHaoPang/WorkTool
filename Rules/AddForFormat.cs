@@ -28,7 +28,7 @@ namespace CheckTools.Rules
 
         private bool RealOpera(List<string> fileContent)
         {
-            //在文件行中查找的关键字是：for\foreach\while
+            //在文件行中查找的关键字是：for\foreach
             //他们的作用域都能找到的时候，就证明符合规范的加分条件
             bool returnB = false;
 
