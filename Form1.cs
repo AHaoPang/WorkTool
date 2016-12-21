@@ -74,18 +74,28 @@ namespace CheckTools
             OutPutFileWrite("************************************");
             OutPutFileWrite("");
 
+            #region 4.文件数大于5，才有加分资格
             int intTemp = 0;
-            if (rdoFirst.Checked)
+            if (filesArray.Count > 5)
             {
-                OutPutFileWrite("项目发布当天提交审核，加分：" + 2);
-                intTemp = 2;
+                if (rdoFirst.Checked)
+                {
+                    OutPutFileWrite("项目发布当天提交审核，加分：" + 2);
+                    intTemp = 2;
+                }
+                else if (rdoSecond.Checked)
+                {
+                    OutPutFileWrite("项目发布次日提交审核，加分：" + 1);
+                    intTemp = 1;
+                }
             }
-            else if (rdoSecond.Checked)
+            else
             {
-                OutPutFileWrite("项目发布次日提交审核，加分：" + 1);
-                intTemp = 1;
-            }
+                OutPutFileWrite("项目审核文件数量小于5，不加分");
+            } 
+            #endregion
 
+            OutPutFileWrite("审核文件数：" + filesArray.Count);
             OutPutFileWrite("项目总得分：" + (projectTotalGrade + intTemp));
 
             MessageBox.Show("操作完成");
